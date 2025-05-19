@@ -9,7 +9,6 @@ export async function loginUser(email: string, password: string): Promise<boolea
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     })
-    console.log("Response:", response) // Debugging line
 
     if (!response.ok) return false
 
