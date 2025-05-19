@@ -1,31 +1,53 @@
 "use client"
+
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { getUserInfo, logout } from "@/lib/auth"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { getUserInfo, logout } from "@/lib/auth"
+
+type UserInfo = {
+  name: string
+  email: string
+  role: string
+  joinDate: string
+}
 
 export default function ProfilePage() {
   const router = useRouter()
-  const [userInfo, setUserInfo] = useState(null)
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const checkAuth = async () => {
-      const user = await getUserInfo()
-      if (!user) return router.push("/")
-      setUserInfo(user)
-      setLoading(false)
+      try {
+        const user = await getUserInfo()
+        if (!user) return router.push("/")
+        setUserInfo(user)
+      } catch (error) {
+        console.error("Error obteniendo usuario:", error)
+        router.push("/")
+      } finally {
+        setLoading(false)
+      }
     }
     checkAuth()
   }, [router])
 
   const handleLogout = async () => {
-    await logout()
-    router.push("/")
+    try {
+      await logout()
+      router.push("/")
+    } catch (error) {
+      console.error("Error cerrando sesión:", error)
+    }
   }
 
-  if (loading) return <p className="text-center mt-10">Cargando...</p>
+  if (loading) return (
+    <div className="flex items-center justify-center h-screen">
+      <p className="text-gray-600 animate-pulse">Cargando perfil...</p>
+    </div>
+  )
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
@@ -35,10 +57,10 @@ export default function ProfilePage() {
           <CardDescription>Bienvenido a tu perfil personal</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p><strong>Nombre:</strong> {userInfo.name}</p>
-          <p><strong>Correo:</strong> {userInfo.email}</p>
-          <p><strong>Rol:</strong> {userInfo.role}</p>
-          <p><strong>Fecha de Registro:</strong> {userInfo.joinDate}</p>
+          <p><strong>Nombre:</strong> {userInfo?.name || "No disponible"}</p>
+          <p><strong>Correo:</strong> {userInfo?.email || "No disponible"}</p>
+          <p><strong>Rol:</strong> {userInfo?.role || "No disponible"}</p>
+          <p><strong>Fecha de Registro:</strong> {userInfo?.joinDate || "No disponible"}</p>
         </CardContent>
         <CardFooter>
           <Button variant="outline" className="w-full" onClick={handleLogout}>Cerrar Sesión</Button>
