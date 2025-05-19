@@ -9,6 +9,7 @@ import { getUserInfo, logout } from "@/lib/auth"
 type UserInfo = {
   name: string
   email: string
+  cedula: string
   role: string
   joinDate: string
 }
@@ -43,11 +44,13 @@ export default function ProfilePage() {
     }
   }
 
-  if (loading) return (
-    <div className="flex items-center justify-center h-screen">
-      <p className="text-gray-600 animate-pulse">Cargando perfil...</p>
-    </div>
-  )
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-gray-600 animate-pulse">Cargando perfil...</p>
+      </div>
+    )
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
@@ -59,11 +62,14 @@ export default function ProfilePage() {
         <CardContent className="space-y-4">
           <p><strong>Nombre:</strong> {userInfo?.name || "No disponible"}</p>
           <p><strong>Correo:</strong> {userInfo?.email || "No disponible"}</p>
+          <p><strong>Cédula:</strong> {userInfo?.cedula || "No disponible"}</p>
           <p><strong>Rol:</strong> {userInfo?.role || "No disponible"}</p>
           <p><strong>Fecha de Registro:</strong> {userInfo?.joinDate || "No disponible"}</p>
         </CardContent>
         <CardFooter>
-          <Button variant="outline" className="w-full" onClick={handleLogout}>Cerrar Sesión</Button>
+          <Button variant="outline" className="w-full" onClick={handleLogout}>
+            Cerrar Sesión
+          </Button>
         </CardFooter>
       </Card>
     </div>
