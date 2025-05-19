@@ -1,6 +1,6 @@
 import { setCookie, getCookie, deleteCookie } from "./session"
 
-const API_BASE_URL = "http://backend-production-6d35.up.railway.app" // <-- Ajusta con tu dominio real
+const API_BASE_URL = "https://backend-production-6d35.up.railway.app" // <-- Ajusta con tu dominio real
 
 export async function loginUser(email: string, password: string): Promise<boolean> {
   try {
