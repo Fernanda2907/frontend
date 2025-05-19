@@ -1,7 +1,7 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { loginUser } from "@/lib/auth"
+import { loginUser, getUserInfo } from "@/lib/auth"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -14,6 +14,15 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+
+  // 🔐 Redirige a /profile si ya hay sesión activa
+  useEffect(() => {
+    const checkIfLoggedIn = async () => {
+      const user = await getUserInfo()
+      if (user) router.push("/profile")
+    }
+    checkIfLoggedIn()
+  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
