@@ -29,7 +29,7 @@ export async function getUserInfo(): Promise<any | null> {
   try {
     const response = await fetch(`${API_BASE_URL}/userinfo`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `${token}`,
       },
     })
 
